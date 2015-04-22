@@ -8,3 +8,6 @@ meteor-platform
 autopublish
 insecure
 http
+less
+nemo64:bootstrap
+mquandalle:jade

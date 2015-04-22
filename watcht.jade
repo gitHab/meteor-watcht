@@ -1,0 +1,27 @@
+head
+    title watchT
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    meta(name='description' content='')
+    meta(name='author' content='hab')
+
+body
+  h1 Welcome to Meteor!
+  .container-fluid
+    .row
+      .col-md-1
+      .col-md-4
+        +vehiclesTemplate
+
+template(name='vehiclesTemplate')
+  | Vehicles:
+  each vehicles
+    +vehicleTemplate
+
+template(name='vehicleTemplate')
+  .well
+    p #{vehicle_id}
+    |   
+    p #{vehicle_lat}
+    |   
+    p #{vehicle_lon}
