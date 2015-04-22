@@ -1,0 +1,22 @@
+<head>
+  <title>watcht</title>
+</head>
+
+<body>
+  <h1>Welcome to Meteor!</h1>
+
+  {{> vehiclesTemplate}}
+</body>
+
+<template name="vehiclesTemplate">
+  Vehicles:
+  {{#each vehicles}}
+    {{> vehicleTemplate}}
+  {{/each}}
+ </template>
+
+<template name='vehicleTemplate'>
+  <p>{{vehicle_id}}</p>
+  <p>{{vehicle_lat}}</p>
+  <p>{{vehicle_lon}}</p>
+</template>
