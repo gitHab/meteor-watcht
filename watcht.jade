@@ -6,11 +6,13 @@ head
     meta(name='author' content='hab')
 
 body
-  h1 Welcome to Meteor!
+  h1 Watch T
   .container-fluid
     .row
-      .col-md-1
-      .col-md-4
+      .col-md-6
+        .map-container
+          +googleMap(name="vehicleMap" options=mapOptions)
+      .col-md-2
         +vehiclesTemplate
 
 template(name='vehiclesTemplate')
@@ -19,7 +21,7 @@ template(name='vehiclesTemplate')
     +vehicleTemplate
 
 template(name='vehicleTemplate')
-  .well
+  .vehicle
     p #{vehicle_id}
     |   
     p #{vehicle_lat}

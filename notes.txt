@@ -1,4 +1,4 @@
 
   meteor add http less nemo64:bootstrap
   meteor add mquandalle:jade
-  
+  meteor add dburles:google-maps

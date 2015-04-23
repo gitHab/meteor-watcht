@@ -8,16 +8,16 @@ var MBTA_API_ROOT_URL = "http://realtime.mbta.com/developer/api/v2/";
 Meteor.startup(function () {
   console.log("Meteor.startup")
 
+  Vehicles.remove({});
+
   var useTimer = false;
   if(useTimer) {
     Meteor.setInterval(function() {
-      var vehicles = getVehiclesByRoute('Green-B');
-
-    }, 3000);
+      getVehiclesByRoute('Green-B');
+    }, 10000);
   }
   else {
-    Vehicles.remove({});
-    var results = getVehiclesByRoute('Green-B');
+    getVehiclesByRoute('Green-B');
   }
 });
 
