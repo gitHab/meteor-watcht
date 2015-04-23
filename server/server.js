@@ -8,15 +8,17 @@ var MBTA_API_ROOT_URL = "http://realtime.mbta.com/developer/api/v2/";
 Meteor.startup(function () {
   console.log("Meteor.startup")
 
-  Vehicles.remove({});
+  Trips.remove({});
 
   var useTimer = false;
   if(useTimer) {
     Meteor.setInterval(function() {
+      getVehiclesByRoute('Green-D');
       getVehiclesByRoute('Green-B');
     }, 10000);
   }
   else {
+    getVehiclesByRoute('Green-D');
     getVehiclesByRoute('Green-B');
   }
 });
@@ -40,7 +42,7 @@ function getVehiclesByRoute(routeId) {
           direction.trip.forEach(function(trip) {
             console.log('            vehicle= ' + trip.vehicle.vehicle_id + '  ' + trip.vehicle.vehicle_lat + '  ' + trip.vehicle.vehicle_lon)
 
-            Vehicles.upsert({ vehicle_id: trip.vehicle.vehicle_id }, trip.vehicle, { upsert: true });
+            Trips.upsert({ trip_id: trip.trip_id }, trip, { upsert: true });
           })
         });
       }

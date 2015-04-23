@@ -1,7 +1,7 @@
 console.log("== client.js " )
 
-Template.vehiclesTemplate.helpers({
-  vehicles: function() { return Vehicles.find({}) }
+Template.tripsTemplate.helpers({
+  trips: function() { return Trips.find({}) }
 });
 
 
@@ -17,24 +17,25 @@ Template.body.helpers({
       // Map initialization options
       return {
         center: new google.maps.LatLng(42.34004, -71.16006),
-        zoom: 14
+        zoom: 12
       };
     }
   }
 });
 
+// Vehicle id to marker associative map.
 var vehicleMarkerMap = {};
 
-function createVehicleMarker(id, fields) {
-  console.log("=== createVehicleMarker: ")
-  console.log("   fields=" + JSON.stringify(fields));
+function updateVehicleMarker(id, vehicle) {
+  console.log("=== updateVehicleMarker: ")
+  console.log("   vehicle=" + JSON.stringify(vehicle));
 
 
   if(vehicleMarkerMap[id] === undefined) {
-    console.log("=== createVehicleMarker: not found")
+    console.log("=== updateVehicleMarker: not found")
 
     // We haven't seen this vehicle yet, create a marker for it.
-    var latLng = new google.maps.LatLng(parseFloat(fields.vehicle_lat), parseFloat(fields.vehicle_lon));
+    var latLng = new google.maps.LatLng(parseFloat(vehicle.vehicle_lat), parseFloat(vehicle.vehicle_lon));
     var marker = new google.maps.Marker({
       position: latLng,
       map: GoogleMaps.maps.vehicleMap.instance
@@ -44,28 +45,29 @@ function createVehicleMarker(id, fields) {
   }
   else {
     // Update the marker.
-    console.log("=== createVehicleMarker: found")
+    console.log("=== updateVehicleMarker: found")
 
-    var marker = vehicleMarkerMap[id];
-    if(fields.vehicle_lat !== undefined && fields.vehicle_lon !== undefined) {
-      var latLng = new google.maps.LatLng(parseFloat(fields.vehicle_lat), parseFloat(fields.vehicle_lon));
-      marker.setPosition(latLng);
+    if(vehicle.vehicle_lat !== undefined && vehicle.vehicle_lon !== undefined) {
+      var latLng = new google.maps.LatLng(parseFloat(vehicle.vehicle_lat), parseFloat(vehicle.vehicle_lon));
+      vehicleMarkerMap[id].setPosition(latLng);
     }
   }
 }
 
-function observeVehicles() {
-  Vehicles.find({}).observeChanges({
+function observeTrips() {
+  Trips.find({}).observeChanges({
     added: function (id, fields) {
-      console.log("== observe: Vehicle added " + id)
-      createVehicleMarker(id, fields);
+      console.log("== observe: Trip added " + id)
+      if(fields.vehicle !== undefined)
+        updateVehicleMarker(id, fields.vehicle);
     },
     changed: function (id, fields) {
-      console.log("== observe: Vehicle updated")
-      createVehicleMarker(id, fields);
+      console.log("== observe: Trip updated")
+      if(fields.vehicle !== undefined)
+        updateVehicleMarker(id, fields.vehicle);
     },
     removed: function (id) {
-      console.log("== observe: Vehicle removed")
+      console.log("== observe: Trip removed")
       delete vehicleMarkerMap[id];
     }
   });
@@ -78,8 +80,8 @@ Template.body.onCreated(function() {
   GoogleMaps.ready('vehicleMap', function(map) {
     // var vehicles = Vehicles.find({});
     // vehicles.forEach(function(vehicle) {
-    //   createVehicleMarker(vehicle);
+    //   updateVehicleMarker(vehicle);
     // });
-    observeVehicles();
+    observeTrips();
   });
 });

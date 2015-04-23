@@ -1,4 +1,4 @@
-Vehicles = new Meteor.Collection("vehicles");
+Trips = new Meteor.Collection("trips");
 
-console.log("== watcht.js " + Vehicles)
+console.log("== watcht.js ")
 

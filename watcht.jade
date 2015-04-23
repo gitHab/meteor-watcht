@@ -13,17 +13,14 @@ body
         .map-container
           +googleMap(name="vehicleMap" options=mapOptions)
       .col-md-2
-        +vehiclesTemplate
+        +tripsTemplate
 
-template(name='vehiclesTemplate')
-  | Vehicles:
-  each vehicles
-    +vehicleTemplate
+template(name='tripsTemplate')
+  | Trips:
+  each trips
+    +tripTemplate
 
-template(name='vehicleTemplate')
-  .vehicle
-    p #{vehicle_id}
-    |   
-    p #{vehicle_lat}
-    |   
-    p #{vehicle_lon}
+template(name='tripTemplate')
+  .trip
+    p Id: #{vehicle.vehicle_id} 
+    p #{vehicle.vehicle_lat} #{vehicle.vehicle_lon}
