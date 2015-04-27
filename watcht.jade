@@ -8,15 +8,15 @@ head
 body
   h1 Watch T
   .container-fluid
+    .map-container
+      +googleMap(name="vehicleMap" options=mapOptions)
+  .container-fluid
     .row
-      .col-md-6
-        .map-container
-          +googleMap(name="vehicleMap" options=mapOptions)
       .col-md-2
         +tripsTemplate
-
+ 
 template(name='tripsTemplate')
-  | Trips:
+  | Trips: #{tripCount}
   each trips
     +tripTemplate
 
