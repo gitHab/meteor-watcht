@@ -14,13 +14,13 @@ Meteor.startup(function() {
 var tripMarkerMap = {};
 
 var routeColors = {
-  'Green-B': { fill: '#66aa66', stroke: '#005500' },
-  'Green-C': { fill: '#66aa66', stroke: '#005500' },
-  'Green-D': { fill: '#66aa66', stroke: '#005500' },
-  'Green-E': { fill: '#66aa66', stroke: '#005500' },
-  'Blue':    { fill: '#6666aa', stroke: '#000055' },
-  'Red':     { fill: '#aa6666', stroke: '#550000' },
-  'Orange':  { fill: '#FF8000', stroke: '#000000' },
+  'Green-B': { fill: '#66aa66', stroke: '#003300' },
+  'Green-C': { fill: '#66aa66', stroke: '#003300' },
+  'Green-D': { fill: '#66aa66', stroke: '#003300' },
+  'Green-E': { fill: '#66aa66', stroke: '#003300' },
+  'Blue':    { fill: '#6666dd', stroke: '#000033' },
+  'Red':     { fill: '#dd4444', stroke: '#330000' },
+  'Orange':  { fill: '#FF8000', stroke: '#bb4000' },
 }
 
 function getRouteColors(routeId) {

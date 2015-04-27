@@ -3,8 +3,10 @@ console.log("== server.js ")
 
 var MBTA_API_KEY = "d_PLQUlAl0yu6cgQ_ITCMA";
 var MBTA_API_ROOT_URL = "http://realtime.mbta.com/developer/api/v2/";
+var requestIntervalHandle = undefined;
 
 function sendRequests() {
+  //console.log('== sendRequests')
   getVehiclesByRoute('Green-B');
   getVehiclesByRoute('Green-C');
   getVehiclesByRoute('Green-D');
@@ -18,13 +20,34 @@ Meteor.startup(function () {
   console.log("Meteor.startup")
 
   Trips.remove({});
-
-  sendRequests();
-  var useTimer = false;
-  if(useTimer) {
-    Meteor.setInterval(sendRequests(), 10000);
-  }
 });
+
+var openConnectionsCount = 0;
+
+Meteor.onConnection(function(connection) {
+  openConnectionsCount++;
+
+  // Start the timer if it's not already running.
+  if(requestIntervalHandle === undefined) {
+    sendRequests();
+    requestIntervalHandle = Meteor.setInterval(sendRequests, 10000);    
+    console.log('Requests started');
+  }
+
+  connection.onClose(function(arg) {
+    console.log("== Connection closed: " + connection.id + " " + connection.clientAddress);
+
+    openConnectionsCount--;
+
+    // Shutdown the request timer if no more connections to avoid unnecessary API calls.
+    if(openConnectionsCount == 0 && requestIntervalHandle !== undefined) {
+      Meteor.clearInterval(requestIntervalHandle);
+      requestIntervalHandle = undefined;
+      console.log('Requests stopped');
+    }
+  }.bind(connection))
+})
+
 
 function getVehiclesByRoute(routeId) {
   var url = MBTA_API_ROOT_URL + "vehiclesbyroute" + "?api_key=" + MBTA_API_KEY + "&route=" + routeId + "&format=json";
@@ -67,5 +90,4 @@ function getVehiclesByRoute(routeId) {
       }
     });
 }
-
 
