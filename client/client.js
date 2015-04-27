@@ -13,12 +13,28 @@ Meteor.startup(function() {
 // Trip id to marker associative map.
 var tripMarkerMap = {};
 
-function getVehicleIcon(bearing) {
+var routeColors = {
+  'Green-B': { fill: '#66aa66', stroke: '#005500' },
+  'Green-C': { fill: '#66aa66', stroke: '#005500' },
+  'Green-D': { fill: '#66aa66', stroke: '#005500' },
+  'Green-E': { fill: '#66aa66', stroke: '#005500' },
+  'Blue':    { fill: '#6666aa', stroke: '#000055' },
+  'Red':     { fill: '#aa6666', stroke: '#550000' },
+  'Orange':  { fill: '#FF8000', stroke: '#000000' },
+}
+
+function getRouteColors(routeId) {
+  return routeColors[routeId] || { fill: '#666666', stroke: '#000000' }
+}
+
+function getVehicleIcon(bearing, routeId) {
+  var routeColors = getRouteColors(routeId);
+
   return {
-    path: 'M 11 0 L 16 11 L 16 22 L 5 22 L 5 11 z',
+    path: 'M 11 0 L 15 11 L 15 22 L 6 22 L 6 11 z',
     scale: 0.7,
-    fillColor: '#668866',
-    strokeColor: '#000000',
+    fillColor: routeColors.fill,
+    strokeColor: routeColors.stroke,
     fillOpacity: 1,
     rotation: parseFloat(bearing),
     anchor: new google.maps.Point(11, 11)
@@ -41,7 +57,7 @@ function updateVehicleMarker(id, fields) {
       position: latLng,
       title: fields.trip_headsign,
       map: map,
-      icon: getVehicleIcon(fields.vehicle.vehicle_bearing),
+      icon: getVehicleIcon(fields.vehicle.vehicle_bearing, fields.route_id),
       // icon: {
       //   path: google.maps.SymbolPath.CIRCLE,
       //   scale: 3
@@ -67,7 +83,7 @@ function updateVehicleMarker(id, fields) {
       tripMarkerMap[id].setPosition(latLng);
     }
     if(fields.vehicle.vehicle_bearing !== undefined) {
-      tripMarkerMap[id].setIcon(getVehicleIcon(fields.vehicle.vehicle_bearing));
+      tripMarkerMap[id].setIcon(getVehicleIcon(fields.vehicle.vehicle_bearing, fields.route_id));
     }
   }
 }
@@ -80,9 +96,9 @@ function observeTrips() {
         updateVehicleMarker(id, fields);
     },
     changed: function (id, fields) {
-      console.log("== observe: Trip updated " + fields.vehicle.vehicle_id + " id:" + id)
+      console.log("== observe: Trip changed " + fields.vehicle.vehicle_id + " id:" + id)
       if(fields.vehicle !== undefined)
-        updateVehicleMarker(id, fields);
+        updateVehicleMarker(id, Trips.findOne(id));
     },
     removed: function (id) {
       console.log("== observe: Trip REMOVED " + id)
@@ -102,7 +118,7 @@ Template.body.helpers({
 
       // Map initialization options
       return {
-        center: new google.maps.LatLng(42.34004, -71.16006),
+        center: new google.maps.LatLng(42.3601, -71.0589),
         zoom: 12,
         styles: [
         {
