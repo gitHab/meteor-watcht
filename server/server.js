@@ -1,7 +1,7 @@
 console.log("== server.js ")
 
 
-var MBTA_API_KEY = "d_PLQUlAl0yu6cgQ_ITCMA";
+var MBTA_API_KEY = "MBTA API KEY GOES HERE";
 var MBTA_API_ROOT_URL = "http://realtime.mbta.com/developer/api/v2/";
 var requestIntervalHandle = undefined;
 
@@ -51,18 +51,20 @@ Meteor.onConnection(function(connection) {
 
 function getVehiclesByRoute(routeId) {
   var url = MBTA_API_ROOT_URL + "vehiclesbyroute" + "?api_key=" + MBTA_API_KEY + "&route=" + routeId + "&format=json";
-  
+
   HTTP.get(url,
     function (error, result) {
       if (!error) {
         var content = JSON.parse(result.content);
-        //console.log('Got it: ' + JSON.stringify(content, null, 2));
+        //console.log('getVehiclesByRoute: ' + JSON.stringify(content, null, 2));
 
+        // Save a list of existing trips.
         var oldTripIds = Trips.find({route_id: content.route_id}).map(function(trip) {
           return trip.trip_id;
         });
         var newTripIds = [];
 
+        // Update/create Trips collection.
         content.direction.forEach(function(direction) {
           direction.trip.forEach(function(trip) {
             trip.route_id = content.route_id;
@@ -76,7 +78,7 @@ function getVehiclesByRoute(routeId) {
         //console.log('oldTripIds: ' + JSON.stringify(oldTripIds))
         //console.log('newTripIds: ' + JSON.stringify(newTripIds))
 
-        // Remove trips that were not included in this update.  Assume they've either gone
+        // Remove trips that were not included in this update.  Assume they've gone
         // underground or have been taken out of service etc...
         oldTripIds.forEach(function(trip_id) {
           if(newTripIds.indexOf(trip_id) === -1) {
