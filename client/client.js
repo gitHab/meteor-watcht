@@ -1,4 +1,3 @@
-console.log("== client.js " )
 
 Template.tripsTemplate.helpers({
   trips: function() { return Trips.find({}) },

@@ -1,5 +1,3 @@
-console.log("== server.js ")
-
 
 var MBTA_API_KEY = "MBTA API KEY GOES HERE";
 var MBTA_API_ROOT_URL = "http://realtime.mbta.com/developer/api/v2/";
