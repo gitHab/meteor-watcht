@@ -1,5 +1,5 @@
 
-var MBTA_API_KEY = "MBTA API KEY GOES HERE";
+var MBTA_API_KEY = "d_PLQUlAl0yu6cgQ_ITCMA";
 var MBTA_API_ROOT_URL = "http://realtime.mbta.com/developer/api/v2/";
 var requestIntervalHandle = undefined;
 
