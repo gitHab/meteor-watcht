@@ -1,5 +1,5 @@
 
-var MBTA_API_KEY = "MBTA API KEY GOES HERE";
+var MBTA_API_KEY = process.env.MBTA_API_KEY || "YOUR_MBTA_API_KEY";
 var MBTA_API_ROOT_URL = "http://realtime.mbta.com/developer/api/v2/";
 var requestIntervalHandle = undefined;
 
@@ -52,7 +52,9 @@ function getVehiclesByRoute(routeId) {
 
   HTTP.get(url,
     function (error, result) {
+      serverStatus.errorCode = result ? result.statusCode : 0;
       if (!error) {
+
         var content = JSON.parse(result.content);
         //console.log('getVehiclesByRoute: ' + JSON.stringify(content, null, 2));
 
@@ -87,7 +89,15 @@ function getVehiclesByRoute(routeId) {
       }
       else {
         console.log("API request error: " + error)
+        serverStatus.errorMessage = error;
       }
     });
 }
+
+var serverStatus = {
+  errorCode: 0,
+  errorMessage: ''
+}
+
+
 

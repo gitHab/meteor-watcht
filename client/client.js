@@ -26,6 +26,7 @@ function getRouteColors(routeId) {
   return routeColors[routeId] || { fill: '#666666', stroke: '#000000' }
 }
 
+// Return options for a Google marker for a vehicle.
 function getVehicleIcon(bearing, routeId) {
   var routeColors = getRouteColors(routeId);
 
@@ -44,23 +45,16 @@ function updateVehicleMarker(id, fields) {
   //console.log("=== updateVehicleMarker: ")
   //console.log("   vehicle=" + JSON.stringify(fields));
 
-
   if(tripMarkerMap[id] === undefined) {
-    //console.log("=== updateVehicleMarker: not found")
+    // We haven't seen this trip yet, create a marker for the vehicle.
 
     var map = GoogleMaps.maps.vehicleMap.instance;
-
-    // We haven't seen this trip yet, create a marker for the vehicle.
     var latLng = new google.maps.LatLng(parseFloat(fields.vehicle.vehicle_lat), parseFloat(fields.vehicle.vehicle_lon));
     var marker = new google.maps.Marker({
       position: latLng,
       title: fields.trip_headsign,
       map: map,
       icon: getVehicleIcon(fields.vehicle.vehicle_bearing, fields.route_id),
-      // icon: {
-      //   path: google.maps.SymbolPath.CIRCLE,
-      //   scale: 3
-      // },
     });
 
     var infowindow = new google.maps.InfoWindow({
@@ -74,8 +68,7 @@ function updateVehicleMarker(id, fields) {
     tripMarkerMap[id] = marker;
   }
   else {
-    // Update the marker.
-    //console.log("=== updateVehicleMarker: found")
+    // Update existing marker.
 
     if(fields.vehicle.vehicle_lat !== undefined && fields.vehicle.vehicle_lon !== undefined) {
       var latLng = new google.maps.LatLng(parseFloat(fields.vehicle.vehicle_lat), parseFloat(fields.vehicle.vehicle_lon));
