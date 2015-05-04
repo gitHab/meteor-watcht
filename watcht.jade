@@ -6,14 +6,14 @@ head
     meta(name='author' content='hab')
 
 body
-  h1 Watch T
-  .container-fluid
-    .map-container
-      +googleMap(name="vehicleMap" options=mapOptions)
-  .container-fluid
-    .row
-      .col-md-2
-        +tripsTemplate
+  +headerTemplate
+
+  .map-container
+    +googleMap(name="vehicleMap" options=mapOptions)
+
+  .row
+    .col-md-2
+      +tripsTemplate
  
 template(name='tripsTemplate')
   | Trips: #{tripCount}
@@ -25,3 +25,14 @@ template(name='tripTemplate')
     b #{trip_headsign}
     p Id: #{vehicle.vehicle_id} 
     p #{vehicle.vehicle_lat} #{vehicle.vehicle_lon}
+
+template(name='headerTemplate')
+  .row
+    .col-xs-6
+      .title Watch T
+
+    .col-xs-6
+      button.btn.btn-default.btn-md.pull-right.current-loc-btn
+        .glyphicon.glyphicon-screenshot(aria-hidden="true")
+  p
+

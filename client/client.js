@@ -4,6 +4,12 @@ Template.tripsTemplate.helpers({
   tripCount: function() { return Trips.find({}).count() }
 });
 
+Template.headerTemplate.events({
+  'click .current-loc-btn': function () {
+    console.log('-- Button clicked')
+    goToCurrentLocation();
+  }
+});
 
 Meteor.startup(function() {
   GoogleMaps.load();
@@ -83,17 +89,17 @@ function updateVehicleMarker(id, fields) {
 function observeTrips() {
   Trips.find({}).observeChanges({
     added: function (id, fields) {
-      console.log("== observe: Trip added   " + fields.vehicle.vehicle_id + " id:" + id)
+      // console.log("== observe: Trip added   " + fields.vehicle.vehicle_id + " id:" + id)
       if(fields.vehicle !== undefined)
         updateVehicleMarker(id, fields);
     },
     changed: function (id, fields) {
-      console.log("== observe: Trip changed " + fields.vehicle.vehicle_id + " id:" + id)
+      // console.log("== observe: Trip changed " + fields.vehicle.vehicle_id + " id:" + id)
       if(fields.vehicle !== undefined)
         updateVehicleMarker(id, Trips.findOne(id));
     },
     removed: function (id) {
-      console.log("== observe: Trip REMOVED " + id)
+      // console.log("== observe: Trip REMOVED " + id)
       if(tripMarkerMap[id] !== undefined) {
         tripMarkerMap[id].setMap(null);
         delete tripMarkerMap[id];
@@ -157,4 +163,44 @@ Template.body.onCreated(function() {
     observeTrips();
   });
 });
+
+var currentLocationMarker = null;
+
+function goToCurrentLocation() {
+  // Try HTML5 geolocation
+  if(navigator.geolocation) {
+    console.log('== Calling getCurrentPosition')
+    navigator.geolocation.getCurrentPosition(function(position) {
+      console.log('== Got current location: ' + JSON.stringify(position));
+      var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+      GoogleMaps.maps.vehicleMap.instance.setCenter(pos);
+      GoogleMaps.maps.vehicleMap.instance.setZoom(16);
+      if(currentLocationMarker) {
+        console.log('== Updating marker')
+        // Update marker.
+        currentLocationMarker.setPosition(pos);
+      }
+      else {
+        console.log('== Creating marker')
+        // Create current position marker.
+        currentLocationMarker = new google.maps.Marker({
+          position: pos,
+          title: 'Current Position',
+          map: GoogleMaps.maps.vehicleMap.instance,
+        });
+
+        navigator.geolocation.watchPosition(function(position) {
+          var watchPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          currentLocationMarker.setPosition(watchPos);
+        })
+      }
+    }, function() {
+      console.log('Error: The Geolocation service failed.');
+    });
+  }
+  else {
+    console.log('Error: Your browser doesn\'t support geolocation.');
+  }
+}
 
