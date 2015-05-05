@@ -34,15 +34,10 @@ function getVehiclesByRoute(routeId) {
         content.direction.forEach(function(direction) {
           direction.trip.forEach(function(trip) {
             trip.route_id = content.route_id;
-            //console.log('            ' + trip.trip_id + ' vehicle= ' + trip.vehicle.vehicle_id + ' ' + content.route_id)
-
             Trips.upsert({ trip_id: trip.trip_id }, trip, { upsert: true });
             newTripIds.push(trip.trip_id);
           })
         });
-
-        //console.log('oldTripIds: ' + JSON.stringify(oldTripIds))
-        //console.log('newTripIds: ' + JSON.stringify(newTripIds))
 
         // Remove trips that were not included in this update.  Assume they've gone
         // underground or have been taken out of service etc...
@@ -78,7 +73,7 @@ Meteor.onConnection(function(connection) {
 
   // Start the timer if it's not already running.
   if(requestIntervalHandle === null) {
-    sendRequests();
+    //sendRequests();
     requestIntervalHandle = Meteor.setInterval(sendRequests, 10000);    
     console.log('== Vehicles:Requests started');
   }

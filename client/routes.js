@@ -22,8 +22,7 @@ function getStopIcon(routeId) {
   var routeColors = getRouteColors(routeId);
 
   return {
-    path: circlePath(11, 11, 8),
-    scale: 0.7,
+    path: circlePath(11, 11, 3),
     fillColor: routeColors.fill,
     strokeColor: routeColors.fill,
     fillOpacity: 1,
@@ -33,20 +32,20 @@ function getStopIcon(routeId) {
 
 function createStopMarker(stop, routeId) {
   //console.log('createStopMarker: ' + stop.stop_name + ' routeId: ' + routeId)
-  var map = GoogleMaps.maps.vehicleMap.instance;
+  var map = GoogleMaps.maps.vehicleMap;
   var latLng = new google.maps.LatLng(parseFloat(stop.stop_lat), parseFloat(stop.stop_lon));
   var marker = new google.maps.Marker({
     position: latLng,
     title: stop.stop_name,
-    map: map,
+    map: map.instance,
     icon: getStopIcon(routeId)
   });
 
-  var infowindow = new google.maps.InfoWindow({
-    content: "<b>" + stop.stop_name + " </b>"
-  });
+  marker.infoWindowContent = "Station:<br/><b>" + stop.stop_name + " </b>";
 
   google.maps.event.addListener(marker, 'click', function() {
-    infowindow.open(map, marker);
+    map.infoWindow.close();
+    map.infoWindow.setContent(marker.infoWindowContent);
+    map.infoWindow.open(map.instance, marker);
   });
 }

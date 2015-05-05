@@ -47,8 +47,6 @@ function getStops(routeId) {
       if (!error) {
 
         var content = JSON.parse(result.content);
-        //console.log('== Routes::getStops: ' + JSON.stringify(content, null, 2));
-
         Routes.update({route_id: routeId}, {$set: {stops: content}})
         console.log('== route:' + JSON.stringify(Routes.find({route_id: routeId}).fetch(), null, 2))
       }

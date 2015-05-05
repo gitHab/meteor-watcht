@@ -16,13 +16,14 @@ Meteor.startup(function() {
 });
 
 var routeColors = {
-  'Green-B': { fill: '#66aa66', stroke: '#003300' },
-  'Green-C': { fill: '#66aa66', stroke: '#003300' },
-  'Green-D': { fill: '#66aa66', stroke: '#003300' },
-  'Green-E': { fill: '#66aa66', stroke: '#003300' },
-  'Blue':    { fill: '#6666dd', stroke: '#000033' },
-  'Red':     { fill: '#dd4444', stroke: '#330000' },
-  'Orange':  { fill: '#FF8000', stroke: '#bb4000' },
+  'Green-B':   { fill: '#66aa66', stroke: '#003300' },
+  'Green-C':   { fill: '#66aa66', stroke: '#003300' },
+  'Green-D':   { fill: '#66aa66', stroke: '#003300' },
+  'Green-E':   { fill: '#66aa66', stroke: '#003300' },
+  'Blue':      { fill: '#6666dd', stroke: '#000033' },
+  'Red':       { fill: '#dd4444', stroke: '#330000' },
+  'Mattapan':  { fill: '#dd4444', stroke: '#330000' },
+  'Orange':    { fill: '#FF8000', stroke: '#bb4000' },
 }
 
 // Global
@@ -76,14 +77,17 @@ Template.body.helpers({
 });
 
 Template.body.onCreated(function() {
-  console.log("==onCreated ")
-  // We can use the `ready` callback to interact with the map API once the map is ready.
   GoogleMaps.ready('vehicleMap', function(map) {
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap(map.instance);
 
     routesOnMapReady();
     tripsOnMapReady();
+
+    // Attach an info window to the map so it can be shared by the various markers
+    // created elsewhere.
+    //
+    map.infoWindow = new google.maps.InfoWindow();
   });
 });
 
