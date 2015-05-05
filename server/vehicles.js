@@ -73,7 +73,7 @@ Meteor.onConnection(function(connection) {
 
   // Start the timer if it's not already running.
   if(requestIntervalHandle === null) {
-    //sendRequests();
+    sendRequests();
     requestIntervalHandle = Meteor.setInterval(sendRequests, 10000);    
     console.log('== Vehicles:Requests started');
   }
