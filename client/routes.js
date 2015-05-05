@@ -2,32 +2,51 @@
 routesOnMapReady = function() {
   console.log('==routes-server:routesOnMapReady')
   Routes.find({mode_name: 'Subway'}).forEach(function(route) {
-    console.log('route: ' + route.route_id)
     route.stops.direction.forEach(function(direction) {
       direction.stop.forEach(function(stop) {
-
-        createStopMarker(stop);
+        createStopMarker(stop, route.route_id);
       })
     })
   })
 }
 
-function createStopMarker(stop) {
-  console.log('createStopMarker: ' + stop.stop_name)
-    var map = GoogleMaps.maps.vehicleMap.instance;
-    var latLng = new google.maps.LatLng(parseFloat(stop.stop_lat), parseFloat(stop.stop_lon));
-    var marker = new google.maps.Marker({
-      position: latLng,
-      title: stop.stop_name,
-      map: map
-//      icon: getVehicleIcon(fields.vehicle.vehicle_bearing, fields.route_id),
-    });
+// Returns an SVG path for a circle.
+//
+function circlePath(cx, cy, r){
+    return 'M '+cx+' '+cy+' m -'+r+', 0 a '+r+','+r+' 0 1,0 '+(r*2)+',0 a '+r+','+r+' 0 1,0 -'+(r*2)+',0';
+}
 
-    var infowindow = new google.maps.InfoWindow({
-      content: "<b>" + stop.stop_name + " </b>"
-    });
+// Return icon options for a Google marker for a subway stop.
+//
+function getStopIcon(routeId) {
+  var routeColors = getRouteColors(routeId);
 
-    google.maps.event.addListener(marker, 'click', function() {
-      infowindow.open(map, marker);
-    });
+  return {
+    path: circlePath(11, 11, 8),
+    scale: 0.7,
+    fillColor: routeColors.fill,
+    strokeColor: routeColors.fill,
+    fillOpacity: 1,
+    anchor: new google.maps.Point(11, 11)
+  }
+}
+
+function createStopMarker(stop, routeId) {
+  //console.log('createStopMarker: ' + stop.stop_name + ' routeId: ' + routeId)
+  var map = GoogleMaps.maps.vehicleMap.instance;
+  var latLng = new google.maps.LatLng(parseFloat(stop.stop_lat), parseFloat(stop.stop_lon));
+  var marker = new google.maps.Marker({
+    position: latLng,
+    title: stop.stop_name,
+    map: map,
+    icon: getStopIcon(routeId)
+  });
+
+  var infowindow = new google.maps.InfoWindow({
+    content: "<b>" + stop.stop_name + " </b>"
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.open(map, marker);
+  });
 }
