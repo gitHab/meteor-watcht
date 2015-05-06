@@ -12,7 +12,25 @@ Template.headerTemplate.events({
 });
 
 Meteor.startup(function() {
+  console.log('==Meteor.startup')
   GoogleMaps.load();
+});
+
+Template.body.onCreated(function() {
+  console.log('== Template.body.onCreated')
+  GoogleMaps.ready('vehicleMap', function(map) {
+    console.log('== GoogleMaps.ready')
+    var transitLayer = new google.maps.TransitLayer();
+    transitLayer.setMap(map.instance);
+
+    routesOnMapReady();
+    tripsOnMapReady();
+
+    // Attach an info window to the map so it can be shared by the various markers
+    // created elsewhere.
+    //
+    map.infoWindow = new google.maps.InfoWindow();
+  });
 });
 
 var routeColors = {
@@ -74,21 +92,6 @@ Template.body.helpers({
       }
     }
   }
-});
-
-Template.body.onCreated(function() {
-  GoogleMaps.ready('vehicleMap', function(map) {
-    var transitLayer = new google.maps.TransitLayer();
-    transitLayer.setMap(map.instance);
-
-    routesOnMapReady();
-    tripsOnMapReady();
-
-    // Attach an info window to the map so it can be shared by the various markers
-    // created elsewhere.
-    //
-    map.infoWindow = new google.maps.InfoWindow();
-  });
 });
 
 var currentLocationMarker = null;

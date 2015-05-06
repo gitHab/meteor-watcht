@@ -1,6 +1,6 @@
 // Global
 routesOnMapReady = function() {
-  console.log('==routes-server:routesOnMapReady')
+  console.log('==routes-client:routesOnMapReady')
   Routes.find({mode_name: 'Subway'}).forEach(function(route) {
     route.stops.direction.forEach(function(direction) {
       direction.stop.forEach(function(stop) {
@@ -37,8 +37,8 @@ function createStopMarker(stop, routeId) {
   var marker = new google.maps.Marker({
     position: latLng,
     title: stop.stop_name,
-    map: map.instance
-    //icon: getStopIcon(routeId)
+    map: map.instance,
+    icon: getStopIcon(routeId)
   });
 
   marker.infoWindowContent = "Station:<br/><b>" + stop.stop_name + " </b>";
