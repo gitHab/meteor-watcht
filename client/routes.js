@@ -31,7 +31,7 @@ function getStopIcon(routeId) {
 }
 
 function createStopMarker(stop, routeId) {
-  //console.log('createStopMarker: ' + stop.stop_name + ' routeId: ' + routeId)
+  console.log('createStopMarker: ' + stop.stop_name + ' routeId: ' + routeId)
   var map = GoogleMaps.maps.vehicleMap;
   var latLng = new google.maps.LatLng(parseFloat(stop.stop_lat), parseFloat(stop.stop_lon));
   var marker = new google.maps.Marker({

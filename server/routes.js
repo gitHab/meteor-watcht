@@ -23,11 +23,13 @@ function getRoutes() {
         // Update/create Trips collection.
         content.mode.forEach(function(mode) {
           mode.route.forEach(function(route) {
+  console.log('== getRoutes: route_id: ' + route.route_id);
             route.route_type = mode.route_type;
             route.mode_name = mode.mode_name;
             newRoute = Routes.insert(route);
 
             if(route.mode_name === 'Subway') {
+              console.log('== getRoutes: is subway route_id: ' + route.route_id);
               getStops(route.route_id);
             }
           })
@@ -53,7 +55,7 @@ function getStops(routeId) {
         //console.log('== route:' + JSON.stringify(Routes.find({route_id: routeId}).fetch(), null, 2))
       }
       else {
-        console.log("Routes:getStops API request error: " + error)
+        console.log("== Routes:getStops API request error: " + error)
       }
     }.bind(routeId));  
 }
