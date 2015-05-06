@@ -10,6 +10,7 @@ Meteor.startup(function () {
 function getRoutes() {
   var url = MBTA_API_ROOT_URL + "routes" + "?api_key=" + MBTA_API_KEY + "&format=json";
 
+  console.log('== getRoutes');
   HTTP.get(url,
     function (error, result) {
       if (!error) {
@@ -17,6 +18,7 @@ function getRoutes() {
         var content = JSON.parse(result.content);
         //console.log('getRoutes: ' + JSON.stringify(content, null, 2));
 
+        console.log('== routes count 1: ' + Routes.find().count())
 
         // Update/create Trips collection.
         content.mode.forEach(function(mode) {
@@ -30,16 +32,16 @@ function getRoutes() {
             }
           })
         });
-        console.log('== routes count: ' + Routes.find().count())
+        console.log('== routes count: 2' + Routes.find().count())
       }
       else {
-        console.log("Routes:getRoutes API request error: " + error)
+        console.log("== Routes:getRoutes API request error: " + error)
       }
     });
 }
 
 function getStops(routeId) {
-  console.log('Routes:getStops: ' + routeId);
+  console.log('== Routes:getStops: ' + routeId);
   var url = MBTA_API_ROOT_URL + "stopsbyroute" + "?api_key=" + MBTA_API_KEY + "&route=" + routeId + "&format=json";
 
   HTTP.get(url,
