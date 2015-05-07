@@ -18,23 +18,20 @@ function getRoutes() {
         var content = JSON.parse(result.content);
         //console.log('getRoutes: ' + JSON.stringify(content, null, 2));
 
-        console.log('== routes count starting: ' + Routes.find().count())
 
         // Update/create Trips collection.
         content.mode.forEach(function(mode) {
           mode.route.forEach(function(route) {
-  console.log('== getRoutes: route_id: ' + route.route_id);
             route.route_type = mode.route_type;
             route.mode_name = mode.mode_name;
 
             if(route.mode_name === 'Subway') {
               newRoute = Routes.insert(route);
-              console.log('== getRoutes: is subway route_id: ' + route.route_id + ' count:' + Routes.find().count());
+              //console.log('== getRoutes: is subway route_id: ' + route.route_id + ' count:' + Routes.find().count());
               getStops(route.route_id);
             }
           })
         });
-        console.log('== routes count: done' + Routes.find().count())
       }
       else {
         console.log("== Routes:getRoutes API request error: " + error)
@@ -43,7 +40,6 @@ function getRoutes() {
 }
 
 function getStops(routeId) {
-  console.log('== Routes:getStops: ' + routeId);
   var url = MBTA_API_ROOT_URL + "stopsbyroute" + "?api_key=" + MBTA_API_KEY + "&route=" + routeId + "&format=json";
 
   HTTP.get(url,

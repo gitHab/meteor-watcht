@@ -17,9 +17,7 @@ Meteor.startup(function() {
 });
 
 Template.body.onCreated(function() {
-  console.log('== Template.body.onCreated')
   GoogleMaps.ready('vehicleMap', function(map) {
-    console.log('== GoogleMaps.ready')
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap(map.instance);
 
@@ -107,12 +105,10 @@ function goToCurrentLocation() {
       GoogleMaps.maps.vehicleMap.instance.setCenter(pos);
       GoogleMaps.maps.vehicleMap.instance.setZoom(16);
       if(currentLocationMarker) {
-        console.log('== Updating marker')
         // Update marker.
         currentLocationMarker.setPosition(pos);
       }
       else {
-        console.log('== Creating marker')
         // Create current position marker.
         currentLocationMarker = new google.maps.Marker({
           position: pos,
