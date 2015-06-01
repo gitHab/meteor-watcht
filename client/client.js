@@ -12,7 +12,6 @@ Template.headerTemplate.events({
 });
 
 Meteor.startup(function() {
-  console.log('==Meteor.startup')
   GoogleMaps.load();
 });
 
